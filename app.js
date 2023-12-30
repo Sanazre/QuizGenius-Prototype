@@ -10,43 +10,42 @@
 // b. color the input for the "correct" answer option in green and the "wrong" ones in red. Make sure it's still readable.
 
 //  optional bonus: make sure the question is not longer than 140 characters.
+//const allTextInputs = document.querySelectorAll('input[type="text"]');
+
+const form = document.getElementById("quizForm");
+const allTextInputs = form.querySelectorAll('input[type="text"]');
 
 function randomizeOptions() {
-  var optionsContainer = document
-    .getElementById("quizForm")
-    .querySelectorAll('input[type="text"]');
-  var optionsArray = Array.from(optionsContainer);
+  const optionsArray = Array.from(allTextInputs);
 
   // Shuffle the options array
   optionsArray.sort(() => Math.random() - 0.5);
 
-  // Update input values with shuffled array
-  optionsArray.forEach((option, index) => {
-    option.value = `Shuffled Option ${index + 1}`;
+  // Update input order within the form
+  optionsArray.forEach((option) => {
+    form.appendChild(option); // Move the input to the end of the form
   });
 }
 
-document
-  .getElementById("quizForm")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
+function resetColors() {
+  allTextInputs.forEach((input) =>
+    input.classList.remove("correct-answer", "wrong-answer")
+  );
+}
 
-    // Reset colors
-    document
-      .querySelectorAll('input[type="text"]')
-      .forEach((input) =>
-        input.classList.remove("correct-answer", "wrong-answer")
-      );
+function handleFormSubmit(event) {
+  event.preventDefault();
 
-    // Get correct answer from the selected option
-    var correctAnswer = document.getElementById("correctAnswer").value;
+  resetColors(); // Call the resetColors function
 
-    // Color correct answer in green and wrong answers in red
-    document.querySelectorAll('input[type="text"]').forEach((input) => {
-      if (input.id === correctAnswer) {
-        input.classList.add("correct-answer");
-      } else {
-        input.classList.add("wrong-answer");
-      }
-    });
+  const correctAnswerIndex =
+    document.getElementById("correctAnswer").selectedIndex;
+
+  allTextInputs.forEach((input, index) => {
+    if (index === correctAnswerIndex) {
+      input.classList.add("correct-answer");
+    } else {
+      input.classList.add("wrong-answer");
+    }
   });
+}

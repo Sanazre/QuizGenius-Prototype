@@ -1,12 +1,12 @@
 body {
   font-family: "Arial", sans-serif, sans-serif;
-  background-color: #f4f4f4;
+  background-color: #f8e4e4; /* Soft pink background */
   margin: 0;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100dvh;
 }
 
 #quizForm {
@@ -14,6 +14,7 @@ body {
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px;
 }
 
 input[type="text"] {
@@ -21,12 +22,12 @@ input[type="text"] {
   padding: 10px;
   margin-bottom: 10px;
   box-sizing: border-box;
-  border: 1px solid #ccc;
+  border: 1px solid #ddb7b7; /* Light pink border */
   border-radius: 4px;
 }
 
 input[type="submit"] {
-  background-color: #4caf50;
+  background-color: #e74c3c; /* Romantic red */
   color: #fff;
   padding: 10px 15px;
   border: none;
@@ -35,15 +36,15 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-  background-color: #45a049;
+  background-color: #c0392b; /* Darker red on hover */
 }
 
 .correct-answer {
-  background-color: #8bc34a;
-  color: #fff;
+  background-color: #ffd2d2; /* Light red for correct answer */
+  color: #e74c3c;
 }
 
 .wrong-answer {
-  background-color: #f44336; /* Red for wrong answer */
-  color: #fff;
+  background-color: #ffbaba; /* Lighter red for wrong answer */
+  color: #e74c3c;
 }
