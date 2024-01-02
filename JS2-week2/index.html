@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz App Prototype</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <form id="quiz-form">
+      <label>Question</label>
+      <input type="text" name="question" />
+
+      <label>Answers</label>
+      <input type="text" name="answers" />
+      <button type="button" onclick="submitQuestion()">Submit Quiz</button>
+    </form>
+
+    <hr />
+
+    <div id="questions-wrapper"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
