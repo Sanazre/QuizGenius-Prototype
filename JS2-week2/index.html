@@ -7,18 +7,30 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <form id="quiz-form">
-      <label>Question</label>
-      <input type="text" name="question" />
-
-      <label>Answers</label>
-      <input type="text" name="answers" />
-      <button type="button" onclick="submitQuestion()">Submit Quiz</button>
+    <form id="question-form">
+      <div class="question-row">
+        <label>Question</label>
+        <input type="text" name="question" />
+        <div class="answer-row">
+          <input type="text" name="answer-text-0" />
+          <select name="correct-answer-0">
+            <option value="false">false</option>
+            <option value="true">true</option>
+          </select>
+        </div>
+        <div class="answer-row">
+          <input type="text" name="answer-text-1" />
+          <select name="correct-answer-1">
+            <option value="false">false</option>
+            <option value="true">true</option>
+          </select>
+        </div>
+        <a href="#" id="add-new-answer-btn">Add new answer</a>
+      </div>
+      <a href="#" id="submit-question-btn">Submit Question</a>
     </form>
-
     <hr />
-
-    <div id="questions-wrapper"></div>
+    <div id="questions-display"></div>
 
     <script src="app.js"></script>
   </body>

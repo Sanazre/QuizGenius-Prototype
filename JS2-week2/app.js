@@ -1,72 +1,121 @@
-let questions = []; // Array of all questions
-const form = document.getElementById("quiz-form");
-const questionsWrapper = document.getElementById("questions-wrapper");
-let idCounter = 1; // Increamenting each question ID
+// JavaScript to handle adding new answer row
+document
+  .getElementById("add-new-answer-btn")
+  .addEventListener("click", function (event) {
+    event.preventDefault(); // Prevent the default behavior of the anchor tag
 
-// this function handles adding each question after submitting
-function submitQuestion() {
-  const formElements = form.elements;
-  const formElementsArray = Array.from(formElements);
-  const answers = formElements["answers"].value.split(",");
-  let correctAnswer = false;
+    const questionRow = document.querySelector(".question-row");
+    const answerRowTemplate = `
+            <div class="answer-row">
+                <input type="text" name="answer-text-{INDEX}">
+                <select name="correct-answer-{INDEX}">
+                    <option value="false">false</option>
+                    <option value="true">true</option>
+                </select>
+            </div>
+        `;
 
-  questions.push(
-    creatQuestionObject(
-      formElements["question"].value,
-      createAnswersArray(answers)
-    )
+    // Find the number of existing answer rows
+    const existingAnswerRows =
+      questionRow.querySelectorAll(".answer-row").length;
+
+    // Replace {INDEX} with the current index in the answerRowTemplate
+    const updatedAnswerRowTemplate = answerRowTemplate.replace(
+      /{INDEX}/g,
+      existingAnswerRows
+    );
+
+    // Insert the updatedAnswerRowTemplate before the "Add new answer" button
+    document
+      .getElementById("add-new-answer-btn")
+      .insertAdjacentHTML("beforebegin", updatedAnswerRowTemplate);
+  });
+
+// Global array to store questions
+const questionsArray = [];
+
+// Function to check if at least one answer is selected as true
+function isAtLeastOneTrueSelected() {
+  const questionForm = document.getElementById("question-form");
+  const answerSelects = questionForm.querySelectorAll(
+    'select[name^="correct-answer-"]'
   );
-
-  createQuestionElement(questions);
-
-  idCounter++;
+  return Array.from(answerSelects).some((select) => select.value === "true");
 }
 
-// creating question object
-function creatQuestionObject(question, answers) {
-  return {
-    id: idCounter,
-    question,
-    answers,
+// Function to display questions after each form submission
+function displayQuestions() {
+  const questionsDisplay = document.getElementById("questions-display");
+  questionsDisplay.innerHTML = ""; // Clear previous content
+
+  questionsArray.forEach((question, index) => {
+    const questionDiv = document.createElement("div");
+    questionDiv.className = "display-question-row";
+
+    questionDiv.innerHTML += `<p>Question ${index + 1}: ${
+      question.question
+    }</p>`;
+
+    const answersList = document.createElement("ul");
+
+    question.answers.forEach((answer) => {
+      const answerItem = document.createElement("li");
+      answerItem.textContent = `${answer.answer} - ${
+        answer.isTrue ? "True" : "False"
+      }`;
+      answersList.appendChild(answerItem);
+    });
+
+    questionDiv.appendChild(answersList);
+    questionsDisplay.appendChild(questionDiv);
+  });
+}
+// Function to extract data from the form and store it in the array
+function submitQuestion() {
+  const questionForm = document.getElementById("question-form");
+
+  // Check if at least one answer is selected as true
+  if (!isAtLeastOneTrueSelected()) {
+    alert("Please select at least one correct answer.");
+    return;
+  }
+
+  const questionData = {
+    id: questionsArray.length,
+    question: questionForm.querySelector('input[name="question"]').value,
+    answers: [],
   };
-}
 
-// create answers array
-function createAnswersArray(answers) {
-  let answersArray = [];
-  answers.forEach((answer) => {
-    answersArray.push({
-      text: answer.replace(" ", ""),
-      isCorrect: false,
+  // Extract answers from the form
+  const answerRows = questionForm.querySelectorAll(".answer-row");
+  answerRows.forEach((answerRow, index) => {
+    const answerText = answerRow.querySelector(
+      `input[name="answer-text-${index}"]`
+    ).value;
+    const isTrue =
+      answerRow.querySelector(`select[name="correct-answer-${index}"]`)
+        .value === "true";
+
+    questionData.answers.push({
+      answer: answerText,
+      isTrue: isTrue,
     });
   });
-  answersArray[
-    Math.floor(Math.random() * answersArray.length)
-  ].isCorrect = true;
-  return answersArray;
+
+  // Add the question data to the main array
+  questionsArray.push(questionData);
+
+  // Display questions after each form submission
+  displayQuestions();
+
+  // Clear form values
+  questionForm.reset();
 }
 
-// creating question element
-function createQuestionElement(questions) {
-  questionsWrapper.innerHTML = "";
-  questions.forEach((question) => {
-    const questionElementwrapper = document.createElement("div");
-    const printedQuiz = document.createElement("h4");
-    const answersElementWrapper = document.createElement("ul");
-    const answerElement = document.createElement("li");
-
-    questionElementwrapper.className = "printed-quiz";
-    printedQuiz.innerHTML = question.question;
-
-    questionElementwrapper.appendChild(printedQuiz);
-
-    question.answers.forEach((answerItem) => {
-      let tempAnswer = answerElement.cloneNode(true);
-      tempAnswer.innerHTML = answerItem.text;
-      answersElementWrapper.appendChild(tempAnswer);
-    });
-
-    questionsWrapper.appendChild(questionElementwrapper);
-    questionsWrapper.appendChild(answersElementWrapper);
+// Event listener for the "Submit Question" link
+document
+  .getElementById("submit-question-btn")
+  .addEventListener("click", function (event) {
+    event.preventDefault(); // Prevent the default behavior of the anchor tag
+    submitQuestion();
   });
-}
